@@ -1,0 +1,26 @@
+stages:
+  - build
+  - test
+  - deploy
+
+before_script:
+  - "echo off"
+  - 'call "%VS140COMNTOOLS%\vsvars32.bat"'
+
+build:
+  stage: build
+  script:
+  - 'msbuild.exe "ConsoleApplication1.sln"'
+
+unitTest:
+  stage: test
+  script:
+  - 'msbuild.exe "ConsoleApplication1.sln"'
+  - 'mstest.exe /testcontainer:.\UnitTestProject1\bin\Debug\UnitTestProject1.dll /detail:errormessage /detail:errorstacktrace /detail:debugtrace'
+
+deploy to prd:
+  stage: deploy
+  script:
+  - 'msbuild.exe "ConsoleApplication1.sln"'
+  - 'copy ConsoleApplication1\bin\debug\*.* %temp%'
+ 
